@@ -1,4 +1,4 @@
-**Install Elastic Stack**
+Install Elastic Stack
 
 Prerequisites
 oracle JAVA is recommended
