@@ -30,16 +30,28 @@ vi /usr/lib/systemd/system/activemq.service
 
 
 [Unit]
+
 Description=activemq message queue
+
 After=network.target
+
 [Service]
+
 PIDFile=/opt/activemq/data/activemq.pid
+
 ExecStart=/opt/activemq/bin/activemq start
+
 ExecStop=/opt/activemq/bin/activemq stop
+
 User=root
+
 Group=root
+
 [Install]
+
 WantedBy=multi-user.target
+
+
 
 sudo systemctl enable activemq.service
 
