@@ -1,42 +1,53 @@
 389 Directory
 All servers should connected to a valid NTP server
+
 **Install Packages**
+
  yum -y install epel-release
+ 
  yum -y install ntpdate screen traceroute tcpdump atop wget dstat vim  unzip telnet
 
-Prepare OS For installation
+**Prepare OS For installation**
 
 Edit hosts file and add hostname with corresponding IP addresss
+
 vi /etc/hosts
 x.x.x.x  mgmt.domainname.com mgmt
 
 useradd -r -s /sbin/nologin admin
 
 Edit file "/etc/sysctl.conf" and add the following lines at the bottom:
+
 net.ipv4.tcp_keepalive_time = 300
 net.ipv4.ip_local_port_range = 1024 65000
 fs.file-max = 64000
 
 vi /etc/security/limits.conf
+
 admin               soft     nofile          8192   
 admin               hard     nofile          8192
 
 vi /etc/profile
+
 ulimit -n 8192
 
 vi /etc/pam.d/login
+
 session    required     /lib/security/pam_limits.so
 
 systemctl reboot
 
-Service Installtion
+**Service Installtion**
+
 Download https://releases.pagure.org/389-ds-base/389-ds-base-1.4.3.3.tar.bz2
+
 Extract  into /opt/
 
 yum install 389-ds openldap-clients
 
-Service Configuration
- setup-ds-admin.pl
+**Service Configuration**
+ 
+setup-ds-admin.pl
 
 - Choose a setup type: 2 Typical
 - Computer name [core01.yourdomain.com]: [enter]
@@ -54,16 +65,21 @@ configuration directory server? [no]: [enter]
 - Password: somthingsafe
 - Administration port [9830]: [enter]
 - Are you ready to set up your servers? [yes]:[enter]
+
 Start and enable service in startup
 systemctl daemon-reload
 systemctl enable --now dirsrv@instance.service (instance name is the host name which is in our document is core01)
 systemctl enable --now dirsrv-admin.service
+
 Check service status
  systemctl status 
  systemctl status dirsrv-admin.service
+
 Verify installation
  ldapsearch -x -b "dc=yourdomain,dc=com"
-GandouDirectory Clustering
+
+**389 Directory Clustering**
+
 In this step we're going to configure Directory Multi-Master an ReadOnly Replication
 
 For Each Master (Core) Servers :
@@ -112,7 +128,7 @@ on Initialize Consumer page Select Initialize consumer now
 
 to verify applied settings select newly created agreement name under userRoot and check the Status section.
 
-Setup Consumer Replicas :
+**Setup Consumer Replicas :**
 
 For Each Replica Server :
 
