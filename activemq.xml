@@ -1,0 +1,158 @@
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+  http://activemq.apache.org/schema/core http://activemq.apache.org/schema/core/activemq-core.xsd">
+
+	<!-- Allows us to use system properties as variables in this configuration file -->
+	<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<value>file:${activemq.conf}/credentials.properties</value>
+		</property>
+	</bean>
+
+	<!-- Allows accessing the server log -->
+	<bean id="logQuery" class="io.fabric8.insight.log.log4j.Log4jLogQuery"
+		  lazy-init="false" scope="singleton"
+		  init-method="start" destroy-method="stop">
+	</bean>
+
+	<!--
+		The <broker> element is used to configure the ActiveMQ broker.
+	-->
+
+
+ <bean id="oracle-ds" class="org.apache.commons.dbcp2.BasicDataSource" destroy-method="close">
+
+            <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+
+            <property name="url" value="jdbc:oracle:thin:@oradb01-prd-dtcr-iums:1525:KHTKU_PAMQ"/>
+
+            <property name="username" value="AMQP01"/>
+
+            <property name="password" value=""/>
+
+            <property name="poolPreparedStatements" value="true"/>
+
+ </bean>
+
+
+
+	<broker xmlns="http://activemq.apache.org/schema/core" brokerName="apamqkhtkup0101" dataDirectory="${activemq.data}">
+
+		<plugins>
+			<simpleAuthenticationPlugin>
+				<users>
+					<authenticationUser username="system" password="" groups="users,admins"/>
+					<authenticationUser username="root" password="" groups="users,admins"/>
+					<authenticationUser username="admin" password="" groups="users,admins"/> 
+				</users>
+			</simpleAuthenticationPlugin>
+		</plugins>
+
+		<destinationPolicy>
+			<policyMap>
+				<policyEntries>
+					<!-- Set the following policy on all queues using the '>' wildcard -->
+				       <policyEntry queue=">" producerFlowControl="false" memoryLimit="512mb" useCache="false">
+						<!--
+						 Tell the dead letter strategy not to process expired messages
+						   so that they will just be discarded instead of being sent to
+						   the DLQ
+						 -->
+						<deadLetterStrategy>
+							<sharedDeadLetterStrategy processExpired="false"/>
+						</deadLetterStrategy>
+					</policyEntry>
+				</policyEntries>
+			</policyMap>
+		</destinationPolicy>
+
+		<!--
+			The managementContext is used to configure how ActiveMQ is exposed in
+			JMX. By default, ActiveMQ uses the MBean server that is started by
+			the JVM. For more information, see:
+
+			http://activemq.apache.org/jmx.html
+		-->
+		<managementContext>
+			<managementContext createConnector="false"/>
+		</managementContext>
+
+		<!--
+			Configure message persistence for the broker. The default persistence
+			mechanism is the KahaDB store (identified by the kahaDB tag).
+			For more information, see:
+
+			http://activemq.apache.org/persistence.html
+		-->
+		<persistenceAdapter>
+		<!--	<kahaDB directory="${activemq.data}/kahadb"/> -->
+		 <jdbcPersistenceAdapter dataDirectory="activemq-data" dataSource="#oracle-ds"/> 
+                </persistenceAdapter>
+
+
+		<!--
+			The systemUsage controls the maximum amount of space the broker will
+			use before disabling caching and/or slowing down producers. For more information, see:
+			http://activemq.apache.org/producer-flow-control.html
+		  -->
+		<systemUsage>
+			<systemUsage>
+				<memoryUsage>
+					<memoryUsage percentOfJvmHeap="70"/>
+				</memoryUsage>
+				<storeUsage>
+					<storeUsage limit="100 gb"/>
+				</storeUsage>
+				<tempUsage>
+					<tempUsage limit="50 gb"/>
+				</tempUsage>
+			</systemUsage>
+		</systemUsage>
+
+<networkConnectors>
+      <networkConnector name="apamqkhtkup0101"
+        uri="static:(failover:(tcp://192.168.83.31:61616,tcp://192.168.83.32:61616))"
+        dynamicOnly="true"
+        networkTTL="3"
+        duplex="true"/>
+</networkConnectors>
+
+		<!--
+			The transport connectors expose ActiveMQ over a given protocol to
+			clients and other brokers. For more information, see:
+
+			http://activemq.apache.org/configuring-transports.html
+		-->
+		<transportConnectors>
+			<!-- DOS protection, limit concurrent connections to 1000 and frame size to 100MB -->
+			<!--<transportConnector name="openwire" uri="tcp://0.0.0.0:61616?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+			<transportConnector name="amqp" uri="amqp://0.0.0.0:5672?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+			<transportConnector name="stomp" uri="stomp://0.0.0.0:61613?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+			<transportConnector name="mqtt" uri="mqtt://0.0.0.0:1883?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>
+			<transportConnector name="ws" uri="ws://0.0.0.0:61614?maximumConnections=1000&amp;wireFormat.maxFrameSize=104857600"/>-->
+			<transportConnector name="openwire" uri="tcp://0.0.0.0:61616?wireFormat.maxInactivityDuration=0&amp;maximumConnections=2000&amp;wireFormat.maxFrameSize=10485760?jms.prefetchPolicy.all=100"/>
+			<transportConnector name="amqp" uri="amqp://0.0.0.0:5672?wireFormat.maxInactivityDuration=0&amp;maximumConnections=2000&amp;wireFormat.maxFrameSize=10485760?jms.prefetchPolicy.all=100"/>
+			<transportConnector name="stomp" uri="stomp://0.0.0.0:61613?wireFormat.maxInactivityDuration=0&amp;maximumConnections=2000&amp;wireFormat.maxFrameSize=10485760?jms.prefetchPolicy.all=100"/>
+			<transportConnector name="mqtt" uri="mqtt://0.0.0.0:1883?wireFormat.maxInactivityDuration=0&amp;maximumConnections=2000&amp;wireFormat.maxFrameSize=10485760?jms.prefetchPolicy.all=100"/>
+			<transportConnector name="ws" uri="ws://0.0.0.0:61614?wireFormat.maxInactivityDuration=0&amp;maximumConnections=2000&amp;wireFormat.maxFrameSize=10485760?jms.prefetchPolicy.all=100"/>
+		</transportConnectors>
+
+		<!-- destroy the spring context on shutdown to stop jetty -->
+		<shutdownHooks>
+			<bean xmlns="http://www.springframework.org/schema/beans"
+				  class="org.apache.activemq.hooks.SpringContextHook"/>
+		</shutdownHooks>
+
+	</broker>
+
+	<!--
+		Enable web consoles, REST and Ajax APIs and demos
+		The web consoles requires by default login, you can disable this in the jetty.xml file
+
+		Take a look at ${ACTIVEMQ_HOME}/conf/jetty.xml for more details
+	-->
+	<import resource="jetty.xml"/>
+
+</beans>
