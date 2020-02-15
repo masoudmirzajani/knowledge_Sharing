@@ -1,9 +1,4 @@
-Introduction
-GandouAudit package is a customization of Elastic Stack for Gandou. Currently Elastic Stack contains 3 modules:
 
-Elastic Search: could be seen as data store and analytics
-Logstash: could be seen as data loader
-Kibana: could be seen as data visualizer and graphical user interface
 Install Elastic Stack
 Prerequisites
 oracle JAVA is recommended
