@@ -26,7 +26,7 @@
 
             <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
 
-            <property name="url" value="jdbc:oracle:thin:@oradb01-prd-dtcr-iums:1525:KHTKU_PAMQ"/>
+            <property name="url" value="jdbc:oracle:thin:@oradb01:1525:PAMQ"/>
 
             <property name="username" value="AMQP01"/>
 
@@ -38,7 +38,7 @@
 
 
 
-	<broker xmlns="http://activemq.apache.org/schema/core" brokerName="apamqkhtkup0101" dataDirectory="${activemq.data}">
+	<broker xmlns="http://activemq.apache.org/schema/core" brokerName="apamq" dataDirectory="${activemq.data}">
 
 		<plugins>
 			<simpleAuthenticationPlugin>
@@ -112,7 +112,7 @@
 		</systemUsage>
 
 <networkConnectors>
-      <networkConnector name="apamqkhtkup0101"
+      <networkConnector name="apamq"
         uri="static:(failover:(tcp://192.168.83.31:61616,tcp://192.168.83.32:61616))"
         dynamicOnly="true"
         networkTTL="3"
