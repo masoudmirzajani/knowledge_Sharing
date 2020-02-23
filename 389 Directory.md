@@ -1,4 +1,5 @@
 389 Directory
+
 All servers should connected to a valid NTP server
 
 **Install Packages**
@@ -9,9 +10,11 @@ All servers should connected to a valid NTP server
 
 **Prepare OS For installation**
 
+
 Edit hosts file and add hostname with corresponding IP addresss
 
 vi /etc/hosts
+
 x.x.x.x  mgmt.domainname.com mgmt
 
 useradd -r -s /sbin/nologin admin
@@ -19,12 +22,15 @@ useradd -r -s /sbin/nologin admin
 Edit file "/etc/sysctl.conf" and add the following lines at the bottom:
 
 net.ipv4.tcp_keepalive_time = 300
+
 net.ipv4.ip_local_port_range = 1024 65000
+
 fs.file-max = 64000
 
 vi /etc/security/limits.conf
 
 admin               soft     nofile          8192   
+
 admin               hard     nofile          8192
 
 vi /etc/profile
@@ -50,35 +56,61 @@ yum install 389-ds openldap-clients
 setup-ds-admin.pl
 
 - Choose a setup type: 2 Typical
+
 - Computer name [core01.yourdomain.com]: [enter]
+
 - System User [nobody]: admin
+
 - System Group [nobody]: admin
+
 - Do you want to register this software with an existing
+
 configuration directory server? [no]: [enter]
+
 - administrator ID [admin]: [enter]
+
 - password: somethingsafe
+
 - Administration Domain [core01.domain.com]: [enter]
+
 - Directory server network port [389]: [enter]
+
 - Directory server identifier [core01]: [enter]
+
 - Suffix [dc=domain, dc=com]: [enter] (Check your suffix if you already have)
+
 - Directory Manager DN [cn=Directory Manager]: [enter]
+
 - Password: somthingsafe
+
 - Administration port [9830]: [enter]
+
 - Are you ready to set up your servers? [yes]:[enter]
 
+
 Start and enable service in startup
+
+
 systemctl daemon-reload
+
 systemctl enable --now dirsrv@instance.service (instance name is the host name which is in our document is core01)
+
 systemctl enable --now dirsrv-admin.service
 
+
 Check service status
+
  systemctl status 
+
  systemctl status dirsrv-admin.service
 
 Verify installation
+
  ldapsearch -x -b "dc=yourdomain,dc=com"
 
+
 **389 Directory Clustering**
+
 
 In this step we're going to configure Directory Multi-Master an ReadOnly Replication
 
