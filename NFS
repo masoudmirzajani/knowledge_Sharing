@@ -1,0 +1,42 @@
+**Install nfs server**
+
+
+yum -y install nfs-utils
+
+vim /etc/idmap.conf
+
+uncomment
+#domain test.com
+
+vim /etc/exports  محل معرفی دایرکتوری به اشتراک گذاشته شده
+
+/home 192.168.1.0/24(rw,no_root_squash)
+
+systemct start rpcbind nfs-server
+systemct enable rpcbind nfs-server
+
+
+
+**Install nfs client**
+
+
+yum -y install nfs-utils
+
+vim /etc/idmap.conf
+
+uncomment
+#domain test.com
+
+systemct start rpcbind
+systemct enable rpcbind
+
+mount -t nfs nfs-server-ip-addr:/home /mnt
+
+vim /etc/fstab
+
+nfs-server-ip-addr:/home /mnt  nfs  defualt 0 0
+
+mount -a
+
+
+
