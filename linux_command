@@ -1,0 +1,27 @@
+﻿find /tmp -type f -mtime +7 | xargs rm -f
+du -hsx * | sort -rh | head -10  یافتن فایل های حجیم
+usermod -aG sudo username افزودن یوزرد در گروه روت
+
+rpm --checksig *.rpm
+rpm -ivh  
+hنمایش # هنگام نصب بسته     
+vنمایش اتفاقات هنگام نصب     
+iنصب بسته
+rpm -qpR  بررسی پیش نیازها
+rpm -qa --last
+rpm -ql
+rpm -Uvh *.rpm
+rpm -ev --nodeps packagename  حذف بسته های rpm بدون حذف فایل های پشتیبان
+rpm -qf /usr/bin/htpasswd بررسی کنیم که فایلی که بر روی سرور نصب شده است مربوط به کدام بسته rpm
+rpm -qi vsftpd
+rpm -qip *.rpm
+rpm -Vp *.rpm صحت نصب درست بسسته ها
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS
+rpm -qa gpg-pubkey*
+
+
+دیتابیس RPM را درصورت خراب شدن مجددا rebuild کنیم
+cd /var/lib
+rm __db*
+rpm --rebuilddb
+rpmdb_verify Packages
