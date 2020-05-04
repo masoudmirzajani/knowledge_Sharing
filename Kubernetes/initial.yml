@@ -1,0 +1,14 @@
+- hosts: all
+  become: yes
+  tasks:
+    - name: create the 'ansible' user
+      user: name=ansible append=yes state=present createhome=yes shell=/bin/bash
+    - name: allow 'ansible' to have passwordless sudo
+      lineinfile:
+        dest: /etc/sudoers
+        line: 'ansible ALL=(ALL) NOPASSWD: ALL'
+        validate: 'visudo -cf %s'
+    - name: set up authorized keys for the ansible user
+      authorized_key: user=ansible key="{{item}}"
+      with_file:
+        - ~/.ssh/id_rsa.pub

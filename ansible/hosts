@@ -1,0 +1,7 @@
+[masters]
+admin ansible_host=192.168.122.200 ansible_user=root
+[workers]
+node01 ansible_host=192.168.122.201 ansible_user=root
+node02 ansible_host=192.168.122.202 ansible_user=root
+node03 ansible_host=192.168.122.203 ansible_user=root
+
