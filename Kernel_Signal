@@ -35,5 +35,5 @@ renice -n(-20,+19) pid
 **Background & Foreground Proccess**
 
 app &
-run app on fg an now will be send to bg 
+run app on fg and now want to send to bg 
 app > ctrl+z (stop proccess and send to Background) > bg "jobs ID"  or  kill -18 pid (for resume proccess in background)
