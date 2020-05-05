@@ -1,0 +1,27 @@
+***GRUB***
+boot step on system:
+1-hardware framware
+2- MBR (a space for install bootloader "now use GRUB2 in all distro"  "Befor > GRUB & LILO")
+3- run GRUB stage1
+4- run GRUB stage2 and this stage load kernel
+
+
+***EFI***
+1-hardware framware
+2-EFI
+3- boot sector "in the first sector of partion "
+4- kernel
+
+===========================================================================
+*** Repair boot loader***
+
+1. restart os
+2. use c for grub shel  and use e for edit
+3. type ls for see partions
+4. set root=(hd0,1)  for use faster show
+5. ls / for show partion of file system
+6. linux /boot/vmlinuz* root=/dev/sda1
+7. initrd /boot/initrd*
+8. boot
+9. after boot install grub 
+https://www.gnu.org/software/grub/manual/grub/html_node/Installing-GRUB-using-grub_002dinstall.html
