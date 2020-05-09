@@ -1,0 +1,32 @@
+*** Initial proccess ***
+
+1- hardware framware
+2- MBR (a space for install bootloader "now use GRUB2 in all distro"  "Befor > GRUB & LILO")
+3- run GRUB stage1
+4- run GRUB stage2 and this stage load kernel
+5- Kernel 
+6- load init proccess with kernel (initialize proccess) by SysV or  Systemd or Upstart
+
+
+*** SysV ***
+
+all service config  in /etc/init.d/
+all runlevel initiall proccess config in /etc/rc*.d/
+/etc/rc0.d/ = runlevel0 = shutdown os
+/etc/rc1.d/ = runlevel1 = single user mode
+/etc/rc2.d/ = runlevel2 = anything
+/etc/rc3.d/ = runlevel3 = os without gui "may be redhat distro use this runlevel"
+/etc/rc4.d/ = runlevel4 = os with or without gui "maybe debian distro use this runlevel"
+/etc/rc5.d/ = runlevel5 = os with gui
+/etc/rc6.d/ = runlevel6 = reboot os
+
+each file name started S into /etc/rc*.d/ to wit start services to liked to this file after use that runlevel
+each file name started K into /etc/rc*.d/ to wit stop services to liked to this file after use that runlevel
+
+
+
+*** Systemd ***
+
+all service unit file in /lib/systemd/system/
+defualt target and system default config in /etc/systemd/system/
+
