@@ -1,5 +1,5 @@
-# Redis Cheatsheet
-# All the commands you need to know
+# REDIS CHEATSHEET
+# ALL THE COMMANDS YOU NEED TO KNOW
 
 
 redis-server /path/redis.conf  # start redis with the related configuration file
